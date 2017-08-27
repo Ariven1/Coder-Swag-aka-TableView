@@ -19,6 +19,7 @@ class CategoriesVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         categoryTable.dataSource = self
     }
 
+    // MARK:- TableView Datasource Method
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return DataService.instance.getCategories().count
@@ -38,6 +39,44 @@ class CategoriesVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
     }
 
+    // MARK:- TableView Delegate Method
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let category = DataService.instance.getCategories()[indexPath.row]
+        performSegue(withIdentifier: "ProductsVC", sender: category)
+    }
+    
+    // MARK:- Segue Method
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if let productsVC = segue.destination as? ProductsVC{
+         
+            // to remove the CODER SWAG title form backbarbutton
+            let barButton = UIBarButtonItem()
+            barButton.title = ""
+            navigationItem.backBarButtonItem = barButton
+            //
+            
+            assert(sender as? Category != nil) // only ran during build time and not for production
+            productsVC.initProducts(category: sender as! Category)
+        }
+    }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
